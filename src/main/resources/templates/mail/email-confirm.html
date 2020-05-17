@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${app.title}">TITLE</title>
+</head>
+<body>
+<div>
+    <p>안녕하세요. <span th:text="${nickname}"></span>님</p>
+
+    <h2>서비스를 사용하려면 링크를 클릭하세요.</h2>
+
+    <div>
+        <a th:href="@{${link}(email=${email},token=${token})}">이메일 인증하기</a>
+        <p>링크가 열리지 않으면 아래 URL을 브라우저에 붙여넣으세요.</p>
+        <small th:utext="@{${link}(email=${email},token=${token})}"></small>
+    </div>
+</div>
+<footer>
+    <small th:text="${app.title}">TITLE</small>
+</footer>
+</body>
+</html>

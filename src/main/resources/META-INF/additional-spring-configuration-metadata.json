@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "app.host",
+      "type": "java.lang.String",
+      "description": "app host URL."
+    },
+    {
+      "name": "app.title",
+      "type": "java.lang.String",
+      "description": "app title name."
+    },
+    {
+      "name": "app.version",
+      "type": "java.lang.String",
+      "description": "app version."
+    },
+    {
+      "name": "app.help-email",
+      "type": "java.lang.String",
+      "description": "sender email address."
+    },
+    {
+      "name": "app.token-available-period",
+      "type": "java.lang.Integer",
+      "description": "email token available minute."
+    }
+  ]
+}

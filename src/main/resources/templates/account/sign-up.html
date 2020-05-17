@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/mainLayout}">
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/account/sign-in.css">
+</th:block>
+<th:block layout:fragment="seo">
+
+</th:block>
+<th:block layout:fragment="content">
+    <div class="main">
+        <div class="row">
+            <div class="sidenav">
+                <div class="login-main-text">
+                    <h2 th:text="${app.title}">TITLE</h2>
+                    <p th:text="${app.version}">VERSION</p>
+                </div>
+            </div>
+            <div class="login-form col-md-12 col-sm-12">
+                <form th:action="@{/account/sign-up}" method="post" class="needs-validation col-md-8" th:object="${signUpForm}" novalidate>
+                    <div class="form-group">
+                        <label for="nickname">Nickname</label>
+                        <input id="nickname" type="text" th:field="*{nickname}" class="form-control"
+                               placeholder="Nickname" aria-describedby="nicknameHelp" required minlength="2" maxlength="20">
+                        <small id="nicknameHelp" class="form-text text-muted">
+                            2자~20자 이내로 입력하세요. 가입 후 변경할 수 있습니다.
+                        </small>
+                        <small class="invalid-feedback">닉네임을 입력하세요.</small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname Error</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" th:field="*{email}" aria-describedby="emailHelp" required placeholder="abc@xyz.com">
+                        <small id="emailHelp" class="form-text text-muted">
+                            이메일 인증이 완료 되야 로그인 가능합니다. 사용자 이메일은 공개 되지 않습니다.
+                        </small>
+                        <small class="invalid-feedback">이메일을 입력하세요.</small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="accountName">Account ID</label>
+                        <input type="text" class="form-control" id="accountName" th:field="*{accountName}" aria-describedby="accountNameHelp" required placeholder="AccountID">
+                        <small id="accountNameHelp" class="form-text text-muted">
+                            사용자에게 노출 되며, 가입 후 변경할 수 없습니다.
+                        </small>
+                        <small class="invalid-feedback">계정명을 입력하세요.</small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('accountName')}" th:errors="*{accountName}">AccountID Error</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" placeholder="Password" th:field="*{password}" aria-describedby="passwordHelp" required minlength="8" maxlength="50">
+                        <small id="passwordHelp" class="form-text text-muted">
+                            8자 이상 50자 이내로 입력하세요. 영문자, 숫자, 특수기호를 사용할 수 있으며 공백은 사용할 수 없습니다.
+                        </small>
+                        <small class="invalid-feedback">패스워드를 입력하세요.</small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordConfirm">Password Confirm</label>
+                        <input type="password" class="form-control" id="passwordConfirm" th:field="*{passwordConfirm}" placeholder="Password confirm" required minlength="8" maxlength="50">
+                    </div>
+                    <button type="submit" class="btn btn-secondary float-right">Sign-up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
+<th:block layout:fragment="script">
+
+</th:block>
+</html>

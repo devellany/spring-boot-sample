@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/mainLayout}">
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/account/sign-in.css">
+</th:block>
+<th:block layout:fragment="seo">
+
+</th:block>
+<th:block layout:fragment="content">
+    <div class="main">
+        <div class="row">
+            <div class="sidenav">
+                <div class="login-main-text">
+                    <h2 th:text="${app.title}">TITLE</h2>
+                    <p th:text="${app.version}">VERSION</p>
+                </div>
+            </div>
+            <div class="login-form col-md-8 col-sm-12">
+                <form th:action="@{/account/email/change}" method="post" th:object="${changeEmailForm}" novalidate>
+                    <div class="form-group">
+                        <label for="accountName">Account ID</label>
+                        <input type="text" class="form-control" id="accountName" name="accountName" required placeholder="AccountID">
+                        <small class="invalid-feedback">계정명을 입력하세요.</small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('accountName')}" th:errors="*{accountName}">Account Error</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required placeholder="Password">
+                        <small class="invalid-feedback">비밀번호를 입력하세요.</small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="changeEmail">Change Email</label>
+                        <input type="text" class="form-control" id="changeEmail" name="changeEmail" required placeholder="abc@xyz.com">
+                        <small class="invalid-feedback">이메일을 입력하세요.</small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('changeEmail')}" th:errors="*{changeEmail}">Email Error</small>
+                    </div>
+                    <button type="submit" class="btn btn-black float-right">Change Email</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
+<th:block layout:fragment="script">
+
+</th:block>
+</html>

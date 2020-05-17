@@ -1,0 +1,58 @@
+plugins {
+    id 'org.springframework.boot' version '2.2.6.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+}
+
+group = 'com.devellany'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+def querydelVersion = '4.2.2'
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+    compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5', version: '3.0.4.RELEASE'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile "com.querydsl:querydsl-core:${querydelVersion}"
+    compile "com.querydsl:querydsl-jpa:${querydelVersion}"
+    compile "com.querydsl:querydsl-apt:${querydelVersion}"
+    compile 'com.h2database:h2:1.4.199'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor "com.querydsl:querydsl-apt:${querydelVersion}:jpa"
+    annotationProcessor "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final"
+    annotationProcessor "javax.annotation:javax.annotation-api:1.3.2"
+    annotationProcessor 'org.projectlombok:lombok'
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.7'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+    useJUnitPlatform()
+}

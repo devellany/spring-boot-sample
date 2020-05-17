@@ -1,0 +1,24 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    hikari:
+      driver-class-name: org.h2.Driver
+      jdbc-url: jdbc:h2:tcp://localhost:9092/./local_H2/testdb
+      username: sa
+      password:
+
+  jpa:
+    database: mysql
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+
+  h2:
+   console:
+      enabled: false
+      path: /h2 # default /h2-console
+
+

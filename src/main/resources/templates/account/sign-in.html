@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/mainLayout}">
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/account/sign-in.css">
+</th:block>
+<th:block layout:fragment="seo">
+
+</th:block>
+<th:block layout:fragment="content">
+    <div class="main">
+        <div class="row">
+            <div class="sidenav">
+                <div class="login-main-text">
+                    <h2 th:text="${app.title}">TITLE</h2>
+                    <p th:text="${app.version}">VERSION</p>
+                </div>
+            </div>
+            <div class="login-form col-md-8 col-sm-12">
+                <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                    이메일과 패스워드가 정확하지 않습니다.
+                </div>
+                <form th:action="@{/account/sign-in}" method="post">
+                    <div class="form-group">
+                        <label for="username">Email</label>
+                        <input type="text" class="form-control" id="username" name="username" required placeholder="abc@xyz.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-black float-right">Sign-in</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
+<th:block layout:fragment="script">
+
+</th:block>
+</html>

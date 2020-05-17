@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/mainLayout}">
+<th:block layout:fragment="css">
+
+</th:block>
+<th:block layout:fragment="seo">
+
+</th:block>
+<th:block layout:fragment="content">
+    <div class="py-5 text-center" th:if="${error == 'NoMatchingTokenException'}">
+        <p class="lead">이메일 확인</p>
+        <div class="alert alert-danger" role="alert">
+            발송된 이메일(<span th:text="${email}">test@email.com</span>)을 확인해주세요.
+            <div>
+                <a th:href="@{/account/email/resend(email=${email})}">메일 재발송</a>
+                &nbsp;&nbsp;&nbsp;
+                <a th:href="@{/account/email/change}">메일 변경</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-5 text-center" th:if="${error == 'UnknownEmailException'}">
+        <p class="lead">이메일 확인</p>
+        <div class="alert alert-danger" role="alert">
+            가입되지 않은 이메일입니다.
+        </div>
+    </div>
+
+    <div class="py-5 text-center" th:if="${error == 'ExpiredTokenException'}">
+        <p class="lead">이메일 확인</p>
+        <div class="alert alert-danger" role="alert">
+            인증 기간이 만료된 토큰입니다.
+            <div>
+                <a th:href="@{/account/email/resend(email=${email})}">메일 재발송</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="py-5 text-center" th:if="${error == null}">
+        <p class="lead">이메일 확인</p>
+        <h2>
+            이메일을 확인했습니다.
+            <span th:text="${nickname}">회원</span>님 가입을 축하합니다.
+        </h2>
+        <small class="text-info">가입할 때 사용한 이메일로 로그인 할 수 있습니다.</small>
+    </div>
+
+</th:block>
+<th:block layout:fragment="script">
+
+</th:block>
+</html>

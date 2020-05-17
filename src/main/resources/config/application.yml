@@ -1,0 +1,33 @@
+server:
+  servlet:
+    session:
+      timeout: 1h
+spring:
+  profiles:
+    active: local
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: validate
+  mail:
+    host: #SMTP_HOST
+    port: #SMTP_PORT
+    username: #ID
+    password: #PASSWORD
+    properties:
+      mail:
+        smtp:
+          auth: false
+          timeout: 50000
+          starttls:
+            enable: true
+app:
+  host: http://localhost:8082
+  title: Devellany's sample
+  version: ver.prototype
+  help-email: #MAIL_SENDER_ADDRESS
+  token-available-period: 60
