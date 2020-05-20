@@ -1,4 +1,4 @@
-package com.devellany.sample.common.infra.ui;
+package com.devellany.sample.common.ui;
 
 import com.devellany.sample.common.infra.config.AppProperties;
 import org.springframework.beans.factory.annotation.Autowired;

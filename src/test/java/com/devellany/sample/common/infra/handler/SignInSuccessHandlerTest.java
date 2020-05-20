@@ -6,7 +6,7 @@ import com.devellany.sample.account.domain.enums.AuthType;
 import com.devellany.sample.account.infra.AccountConfirmRepository;
 import com.devellany.sample.account.infra.AccountRepository;
 import com.devellany.sample.account.ui.params.EmailConfirmParams;
-import com.devellany.sample.common.infra.helper.AuthenticationHelper;
+import com.devellany.sample.common.application.AuthenticationHelper;
 import com.devellany.sample.config.MockMvcTest;
 import com.devellany.sample.config.TestAccountHelper;
 import org.junit.jupiter.api.AfterEach;

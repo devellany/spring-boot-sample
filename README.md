@@ -13,6 +13,7 @@ For the purpose of learning "Spring Boot", I studied the login functions require
 - Thymeleaf
 - Modelmapper
 - JUnit
+- Lombok
 
 
 ## Feature
@@ -21,17 +22,29 @@ Test code for all features.
 - Sign in
 - Sign out
 - Email verification
-- Resend Email
+- Resend email
 - Change email
 
 
-## What is "local_H2" directory?
+## What is directory "local_H2"?
 H2 is an in-memory database, so it does not support the remote connection as a default option.  
 The "local_H2" directory contains files that support remote connections.  
-See the team blog "dico.me" for more details
+See the team blog "dico.me" for more details.
 
 Link: [Remote connection for H2 Database](https://dico.me/java/articles/241)
 
+### How to connect "local_h2"?
+Notice: Run to Appication for `EmbeddedH2Config`.
+```
+HOST: localhost
+PORT: 9092
+USER: sa
+PASSWORD: <EMPTY>
+DATABASE: ./local_H2/testdb
+
+URL: jdbc:h2:tcp://localhost:9092/./local_H2/testdb
+```
+<img src="local_H2/local_h2_config.png" width="40%" height="40%" alt="H2 config"/>
 
 ## Required setting "application.yml"
 ``` yaml

@@ -32,7 +32,12 @@ public class TestAccountHelper {
     }
 
     public void signInUser() {
-        Account account = accountRepository.findByAccountName(USERNAME);
+        Account account = accountRepository.findByAccountName(USERNAME).orElse(Account.EMPTY);
+        if (account.isEmpty()) {
+            this.createUser();
+            account = accountRepository.findByAccountName(USERNAME).orElse(Account.EMPTY);
+        }
+
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 new UserAccount(account),
                 account.getPassword(),

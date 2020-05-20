@@ -2,10 +2,10 @@ package com.devellany.sample.account.domain;
 
 import com.devellany.sample.account.domain.enums.AuthType;
 import com.devellany.sample.account.domain.enums.VerifiedStatus;
+import com.devellany.sample.account.infra.AccountConfirmRepository;
 import com.devellany.sample.account.ui.params.EmailConfirmParams;
 import com.devellany.sample.common.domain.BaseEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,10 +15,9 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@NoArgsConstructor @AllArgsConstructor @Builder
+@NoArgsConstructor @AllArgsConstructor
 public class AccountConfirm extends BaseEntity {
-    @Transient
-    public static final AccountConfirm EMPTY = new AccountConfirm();
+    @Transient public static final AccountConfirm EMPTY = new AccountConfirm();
 
     @Id @GeneratedValue
     private Long id;
@@ -40,11 +39,16 @@ public class AccountConfirm extends BaseEntity {
     @Column(nullable = false, length = 10)
     private VerifiedStatus verifiedStatus;
 
-    public void generateEmailCheckToken(Account account) {
-        this.authType = AuthType.EMAIL;
-        this.authKey = account.getEmail();
-        this.verifiedStatus = VerifiedStatus.WAITING;
-        this.token = UUID.randomUUID().toString();
+    public static AccountConfirm generateEmailCheckToken(Account account, AccountConfirmRepository accountConfirmRepository) {
+        AccountConfirm accountConfirm = new AccountConfirm();
+
+        accountConfirm.AccountName = account.getAccountName();
+        accountConfirm.authType = AuthType.EMAIL;
+        accountConfirm.authKey = account.getEmail();
+        accountConfirm.verifiedStatus = VerifiedStatus.WAITING;
+        accountConfirm.token = UUID.randomUUID().toString();
+
+        return accountConfirmRepository.save(accountConfirm);
     }
 
     public Boolean completeEmailToken(EmailConfirmParams params) {
@@ -62,6 +66,10 @@ public class AccountConfirm extends BaseEntity {
 
         this.verifiedStatus = VerifiedStatus.CONFIRM;
         return true;
+    }
+
+    public Boolean isEmpty() {
+        return this == AccountConfirm.EMPTY;
     }
 
     public Boolean isEmailType() {

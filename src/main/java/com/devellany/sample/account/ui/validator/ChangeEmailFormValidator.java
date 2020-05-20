@@ -25,15 +25,28 @@ public class ChangeEmailFormValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ChangeEmailForm changeEmailForm = (ChangeEmailForm)target;
 
-        Account account = accountRepository.findByAccountName(changeEmailForm.getAccountName());
-        if (!accountRepository.existsByAccountName(changeEmailForm.getAccountName())
-                || !passwordEncoder.matches(changeEmailForm.getPassword(), account.getPassword())
-        ) {
+        if (!this.ableAccount(changeEmailForm)) {
             errors.rejectValue("accountName", "invalid.accountName", "아이디 또는 비밀번호가 잘못 입력되었습니다.");
         }
 
         if (accountRepository.existsByEmail(changeEmailForm.getChangeEmail())) {
             errors.rejectValue("changeEmail", "invalid.changeEmail", "이미 사용 중인 이메일입니다.");
         }
+    }
+
+    private Boolean ableAccount(ChangeEmailForm changeEmailForm) {
+        Account account = accountRepository.findByAccountName(
+                changeEmailForm.getAccountName()
+        ).orElse(Account.EMPTY);
+
+        if (account.isEmpty()) {
+            return false;
+        }
+
+        if (!accountRepository.existsByAccountName(changeEmailForm.getAccountName())) {
+            return false;
+        }
+
+        return passwordEncoder.matches(changeEmailForm.getPassword(), account.getPassword());
     }
 }

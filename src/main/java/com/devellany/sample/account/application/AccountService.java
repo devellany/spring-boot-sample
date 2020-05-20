@@ -14,7 +14,7 @@ import com.devellany.sample.account.ui.form.SignUpForm;
 import com.devellany.sample.account.ui.params.EmailConfirmParams;
 import com.devellany.sample.common.domain.EmailMessage;
 import com.devellany.sample.common.infra.config.AppProperties;
-import com.devellany.sample.common.infra.email.EmailService;
+import com.devellany.sample.common.application.EmailService;
 import com.devellany.sample.common.infra.handler.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -37,26 +37,39 @@ public class AccountService {
 
     @Transactional
     public void processNewAccount(SignUpForm signUpForm) {
-        Account newAccount = this.saveNewAccount(signUpForm);
+        signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+
+        Account newAccount = accountRepository.save(
+                modelMapper.map(signUpForm, Account.class)
+        );
 
         this.sendSignUpConfirmEmail(newAccount);
     }
 
     @Transactional
-    public void processChangeEmail(ChangeEmailForm changeEmailForm) {
-        Account account = accountRepository.findByAccountName(changeEmailForm.getAccountName());
+    public Boolean processChangeEmail(ChangeEmailForm changeEmailForm) {
+        Account account = accountRepository.findByAccountName(
+                changeEmailForm.getAccountName()
+        ).orElse(Account.EMPTY);
+
+        if (account.isEmpty()) {
+            return false;
+        }
 
         account.changeEmail(changeEmailForm.getChangeEmail());
         this.sendSignUpConfirmEmail(account);
+
+        return true;
     }
 
     @Transactional
     public Account processEmailConfirm(EmailConfirmParams emailConfirmParams) throws CustomException {
+        Account account = accountRepository.findByEmail(emailConfirmParams.getEmail()).orElse(Account.EMPTY);
         AccountConfirm accountConfirm = accountConfirmRepository.findTopByAuthTypeEqualsAndAuthKeyOrderByRegDtmDesc(
                 AuthType.EMAIL, emailConfirmParams.getEmail()
         ).orElse(AccountConfirm.EMPTY);
 
-        if (accountConfirm == AccountConfirm.EMPTY) {
+        if (account.isEmpty() || accountConfirm.isEmpty()) {
             throw new UnknownEmailException("No matching email.");
         }
 
@@ -72,38 +85,21 @@ public class AccountService {
             throw new NoMatchingTokenException("No matching token data.");
         }
 
-        return accountRepository.findByEmail(emailConfirmParams.getEmail());
+        return account;
     }
 
     @Transactional
     public void resendEmailForConfirm(EmailConfirmParams emailConfirmParams) throws UnknownEmailException {
-        if (!accountRepository.existsByEmail(emailConfirmParams.getEmail())) {
+        Account account = accountRepository.findByEmail(emailConfirmParams.getEmail()).orElse(Account.EMPTY);
+        if (account.isEmpty() || !accountRepository.existsByEmail(emailConfirmParams.getEmail())) {
             throw new UnknownEmailException("No matching email.");
         }
 
-        this.sendSignUpConfirmEmail(
-                accountRepository.findByEmail(emailConfirmParams.getEmail())
-        );
-    }
-
-    private Account saveNewAccount(SignUpForm signUpForm) {
-        signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
-
-        Account newAccount = modelMapper.map(signUpForm, Account.class);
-        return accountRepository.save(newAccount);
-    }
-
-    private AccountConfirm generateEmailToken(Account account) {
-        AccountConfirm accountConfirm = AccountConfirm.builder()
-                .AccountName(account.getAccountName())
-                .build();
-        accountConfirm.generateEmailCheckToken(account);
-
-        return accountConfirmRepository.save(accountConfirm);
+        this.sendSignUpConfirmEmail(account);
     }
 
     private void sendSignUpConfirmEmail(Account account) {
-        AccountConfirm accountConfirm = this.generateEmailToken(account);
+        AccountConfirm accountConfirm = AccountConfirm.generateEmailCheckToken(account, accountConfirmRepository);
 
         Context context = new Context();
         context.setVariable("link", appProperties.getHost() + "/account/email/confirm");

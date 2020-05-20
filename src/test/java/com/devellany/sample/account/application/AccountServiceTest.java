@@ -13,7 +13,7 @@ import com.devellany.sample.account.ui.form.SignUpForm;
 import com.devellany.sample.account.ui.params.EmailConfirmParams;
 import com.devellany.sample.common.domain.EmailMessage;
 import com.devellany.sample.common.infra.config.AppProperties;
-import com.devellany.sample.common.infra.email.EmailService;
+import com.devellany.sample.common.application.EmailService;
 import com.devellany.sample.common.infra.handler.CustomException;
 import com.devellany.sample.config.MockMvcTest;
 import com.devellany.sample.config.TestAccountHelper;
@@ -65,7 +65,7 @@ class AccountServiceTest {
 
         accountService.processNewAccount(signUpForm);
 
-        Account account = accountRepository.findByEmail(signUpForm.getEmail());
+        Account account = accountRepository.findByEmail(signUpForm.getEmail()).orElse(Account.EMPTY);
         AccountConfirm accountConfirm = accountConfirmRepository.findTopByAuthTypeEqualsAndAuthKeyOrderByRegDtmDesc(
                 AuthType.EMAIL, account.getEmail()
         ).orElse(AccountConfirm.EMPTY);

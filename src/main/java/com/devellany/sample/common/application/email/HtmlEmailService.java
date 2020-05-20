@@ -1,5 +1,6 @@
-package com.devellany.sample.common.infra.email;
+package com.devellany.sample.common.application.email;
 
+import com.devellany.sample.common.application.EmailService;
 import com.devellany.sample.common.domain.EmailMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;

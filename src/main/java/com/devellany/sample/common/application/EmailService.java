@@ -1,4 +1,4 @@
-package com.devellany.sample.common.infra.email;
+package com.devellany.sample.common.application;
 
 import com.devellany.sample.common.domain.EmailMessage;
 

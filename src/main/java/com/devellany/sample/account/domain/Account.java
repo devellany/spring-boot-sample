@@ -7,9 +7,12 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Getter @Setter // used spring security, please unused service code!
+@Getter @Setter //A "setter" is required for "Spring Security". Do not use "setter".
 @NoArgsConstructor @AllArgsConstructor @Builder
 public class Account extends BaseEntity {
+    @Transient
+    public static final Account EMPTY = new Account();
+
     @Id @GeneratedValue
     private Long id;
 
@@ -38,5 +41,7 @@ public class Account extends BaseEntity {
         this.email = email;
     }
 
-
+    public Boolean isEmpty() {
+        return this == Account.EMPTY;
+    }
 }

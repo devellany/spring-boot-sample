@@ -1,4 +1,4 @@
-package com.devellany.sample.common.infra.helper;
+package com.devellany.sample.common.application;
 
 import com.devellany.sample.account.domain.Account;
 import com.devellany.sample.account.domain.security.UserAccount;
@@ -52,12 +52,12 @@ public class AuthenticationHelper implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountRepository.findByEmail(username);
-        if (account == null) {
-            account = accountRepository.findByAccountName(username);
+        Account account = accountRepository.findByEmail(username).orElse(Account.EMPTY);
+        if (account.isEmpty()) {
+            account = accountRepository.findByAccountName(username).orElse(Account.EMPTY);
         }
 
-        if (account == null) {
+        if (account.isEmpty()) {
             throw new UsernameNotFoundException(username);
         }
 
