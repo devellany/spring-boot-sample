@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<th:block th:fragment="navigationFragment">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<th:block th:fragment="topFragment">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
         <a class="navbar-brand" href="/" th:text="${app.title}">TITLE</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topbar" aria-controls="topbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarColor01">
+        <div class="collapse navbar-collapse" id="topbar">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item"> <!-- active -->
+                <li class="nav-item">
                     <a class="nav-link" href="https://dico.me" target="_blank">blog</a>
                 </li>
                 <li class="nav-item">
@@ -17,9 +17,6 @@
                 </li>
             </ul>
             <ul class="navbar-nav my-2 my-lg-0">
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" th:href="@{/account/sign-out}">Sign-out</a>
-                </li>
                 <li class="nav-item" sec:authorize="!isAuthenticated()">
                     <a class="nav-link" href="/account/sign-in">Sign-in</a>
                 </li>
@@ -27,6 +24,61 @@
                     <a class="nav-link" href="/account/sign-up">Sign-up</a>
                 </li>
             </ul>
+        </div>
+    </nav>
+</th:block>
+<th:block th:fragment="signInFragment">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <a class="navbar-brand" href="/" th:text="${app.title}">TITLE</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+    <nav id="sidebar" class="sidebar-wrapper">
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <div class="user-pic">
+                    <img class="img-responsive img-rounded" src="https://fakeimg.pl/56x56?text=profile" alt="User picture">
+                </div>
+                <div class="user-info">
+                    <span class="user-name"><strong th:text="${account.nickname}">NICKNAME</strong></span>
+                    <span class="user-role" th:text="${account.role}">ROLE</span>
+                    <span class="user-status"><i class="fa fa-circle"></i><span>Online</span></span>
+                </div>
+            </div>
+            <div class="sidebar-menu">
+                <ul>
+                    <li class="header-menu"><span>General</span></li>
+                    <li class="sidebar-dropdown">
+                        <a href="#"><i class="far fa-folder"></i><span>Menu</span><span class="badge badge-pill badge-warning">New</span>
+                        </a>
+                        <div class="sidebar-submenu">
+                            <ul>
+                                <li><a href="#">Menu 1<span class="badge badge-pill badge-success">New</span></a></li>
+                                <li><a href="#">Menu 2</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="sidebar-dropdown">
+                        <a href="#"><i class="far fa-address-card"></i><span>Menu</span></a>
+                        <div class="sidebar-submenu">
+                            <ul>
+                                <li><a href="#">Menu 3</a></li>
+                                <li><a href="#">Menu 4</a></li>
+                                <li><a href="#">Menu 5</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="header-menu"><span>Sample</span></li>
+                    <li><a href="#"><i class="fa fa-folder"></i><span>Examples</span></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <a href="#"><i class="fa fa-bell"></i><span class="badge badge-pill badge-warning notification">99+</span></a>
+            <a href="#"><i class="fa fa-envelope"></i><span class="badge badge-pill badge-success notification">99+</span></a>
+            <a href="#"><i class="fa fa-cog"></i></a>
+            <a th:href="@{/account/sign-out}"><i class="fa fa-power-off"></i></a>
         </div>
     </nav>
 </th:block>

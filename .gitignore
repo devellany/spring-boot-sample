@@ -1,6 +1,7 @@
 HELP.md
 .gradle
 build/
+local_H2/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**
 !**/src/test/**
@@ -30,3 +31,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+/src/main/resources/static/node_modules/

@@ -23,7 +23,7 @@ public class AccountConfirm extends BaseEntity {
     private Long id;
 
     @Column(nullable = false, length = 15)
-    private String AccountName;
+    private String accountName;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
@@ -42,7 +42,7 @@ public class AccountConfirm extends BaseEntity {
     public static AccountConfirm generateEmailCheckToken(Account account, AccountConfirmRepository accountConfirmRepository) {
         AccountConfirm accountConfirm = new AccountConfirm();
 
-        accountConfirm.AccountName = account.getAccountName();
+        accountConfirm.accountName = account.getAccountName();
         accountConfirm.authType = AuthType.EMAIL;
         accountConfirm.authKey = account.getEmail();
         accountConfirm.verifiedStatus = VerifiedStatus.WAITING;

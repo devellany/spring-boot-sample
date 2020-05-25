@@ -16,6 +16,7 @@ public class IndexController  extends BaseController {
             return "account/sign-in";
         }
 
+        model.addAttribute("account", account);
         return "main/index";
     }
 }

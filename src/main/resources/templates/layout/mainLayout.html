@@ -7,11 +7,10 @@
         <th:block layout:fragment="seo">seo</th:block>
     </head>
     <body>
-        <div th:replace="layout/fragments/navigation :: navigationFragment"></div>
+        <div th:replace="layout/fragments/navigation :: topFragment"></div>
         <div class="container-fluid">
-            <th:block layout:fragment="content">content</th:block>
+            <th:block layout:fragment="contents">contents</th:block>
         </div>
         <div th:replace="layout/fragments/script :: scriptFragment"></div>
         <th:block layout:fragment="script">script</th:block>
     </body>
-</html>

@@ -4,6 +4,7 @@ For the purpose of learning "Spring Boot", I studied the login functions require
 
 
 ## Uses
+### Back-end
 - Java 11
 - Spring Boot 2.2.6
 - Spring Security
@@ -15,6 +16,15 @@ For the purpose of learning "Spring Boot", I studied the login functions require
 - JUnit
 - Lombok
 
+### Front-end
+- npm
+- jQuery
+- Font Awesome
+- Bootstrap
+- Bootswatch
+- Bootsnipp
+  - [layout1](https://bootsnipp.com/snippets/7nk08), [layout2](https://bootsnipp.com/snippets/Q0dAX)
+
 
 ## Feature
 Test code for all features.
@@ -24,6 +34,13 @@ Test code for all features.
 - Email verification
 - Resend email
 - Change email
+
+## Add "node_modules"
+``` shell
+cd src/main/resources
+npm install
+```
+next commit: npm auto-install
 
 
 ## What is directory "local_H2"?
@@ -44,7 +61,7 @@ DATABASE: ./local_H2/testdb
 
 URL: jdbc:h2:tcp://localhost:9092/./local_H2/testdb
 ```
-<img src="local_H2/local_h2_config.png" width="40%" height="40%" alt="H2 config"/>
+<img src="local_H2/local_h2_config.png" alt="H2 config"/>
 
 ## Required setting "application.yml"
 ``` yaml
@@ -76,7 +93,6 @@ app:
 - Spring data JPA, Keesun Baik [Link](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81-%EB%8D%B0%EC%9D%B4%ED%84%B0-jpa)
 - Spring boot concept and use, Keesun Baik [Link](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8)
 - Java ORM standard JPA programming, Younghan Kim [Link](http://www.kyobobook.co.kr/product/detailViewKor.laf?barcode=9788960777330)
-- Bootstrap theme, Bootswatch [Link](https://bootswatch.com)
 - Reference documents
 - StackOverflow
 
