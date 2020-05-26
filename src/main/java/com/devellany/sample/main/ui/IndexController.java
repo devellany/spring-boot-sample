@@ -12,7 +12,7 @@ public class IndexController  extends BaseController {
 
     @GetMapping("/")
     public String index(@CurrentAccount Account account, Model model) {
-        if (account == null) {
+        if (account.isEmpty()) {
             return "account/sign-in";
         }
 

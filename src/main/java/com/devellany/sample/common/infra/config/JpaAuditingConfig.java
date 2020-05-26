@@ -1,7 +1,7 @@
 package com.devellany.sample.common.infra.config;
 
 import com.devellany.sample.account.domain.Account;
-import com.devellany.sample.account.domain.security.UserAccount;
+import com.devellany.sample.common.domain.security.UserAccount;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;

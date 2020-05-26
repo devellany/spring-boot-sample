@@ -1,4 +1,4 @@
-package com.devellany.sample.account.domain.security;
+package com.devellany.sample.common.domain.security;
 
 import com.devellany.sample.account.domain.Account;
 import lombok.Getter;

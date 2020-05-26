@@ -3,7 +3,7 @@ package com.devellany.sample.common.infra.handler;
 import com.devellany.sample.account.domain.Account;
 import com.devellany.sample.account.domain.AccountConfirm;
 import com.devellany.sample.account.domain.enums.AuthType;
-import com.devellany.sample.account.domain.security.UserAccount;
+import com.devellany.sample.common.domain.security.UserAccount;
 import com.devellany.sample.account.infra.AccountConfirmRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

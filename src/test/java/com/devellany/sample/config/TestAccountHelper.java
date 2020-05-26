@@ -2,7 +2,7 @@ package com.devellany.sample.config;
 
 import com.devellany.sample.account.application.AccountService;
 import com.devellany.sample.account.domain.Account;
-import com.devellany.sample.account.domain.security.UserAccount;
+import com.devellany.sample.common.domain.security.UserAccount;
 import com.devellany.sample.account.infra.AccountRepository;
 import com.devellany.sample.account.ui.form.SignUpForm;
 import org.springframework.beans.factory.annotation.Autowired;

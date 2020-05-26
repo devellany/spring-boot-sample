@@ -1,7 +1,7 @@
 package com.devellany.sample.common.application;
 
 import com.devellany.sample.account.domain.Account;
-import com.devellany.sample.account.domain.security.UserAccount;
+import com.devellany.sample.common.domain.security.UserAccount;
 import com.devellany.sample.account.infra.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,5 +1,6 @@
 package com.devellany.sample.common.infra.config;
 
+import com.devellany.sample.common.domain.security.AnonymousAccount;
 import com.devellany.sample.common.infra.handler.SignInSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -26,6 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.anonymous().principal(AnonymousAccount.of());
+
         http.authorizeRequests()
                 .mvcMatchers(
                         "/",
