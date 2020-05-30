@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter @Setter //A "setter" is required for "Spring Security". Do not use "setter".
-@NoArgsConstructor @AllArgsConstructor @Builder
+@NoArgsConstructor
 public class Account extends BaseEntity {
     @Transient
     public static final Account EMPTY = new Account();

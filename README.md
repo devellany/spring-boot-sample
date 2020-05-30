@@ -1,3 +1,8 @@
+![Build](https://github.com/devellany/spring-boot-sample/workflows/Java%20CI%20with%20Gradle/badge.svg)
+[![Maintainability](https://api.codeclimate.com/v1/badges/f4c6b8d3ea200e44fee9/maintainability)](https://codeclimate.com/github/devellany/spring-boot-sample/maintainability)
+[![codecov](https://codecov.io/gh/devellany/spring-boot-sample/branch/master/graph/badge.svg)](https://codecov.io/gh/devellany/spring-boot-sample)
+[![HitCount](http://hits.dwyl.com/devellany/spring-boot-sample.svg)](http://hits.dwyl.com/devellany/spring-boot-sample)
+
 # Spring boot sample
 This repository is "Spring boot" sample code.  
 For the purpose of learning "Spring Boot", I studied the login functions required for all sites.
@@ -27,7 +32,6 @@ For the purpose of learning "Spring Boot", I studied the login functions require
 
 
 ## Feature
-Test code for all features.
 - Sign up
 - Sign in
 - Sign out

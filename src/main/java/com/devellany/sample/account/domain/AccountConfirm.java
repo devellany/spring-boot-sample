@@ -5,7 +5,6 @@ import com.devellany.sample.account.domain.enums.VerifiedStatus;
 import com.devellany.sample.account.infra.AccountConfirmRepository;
 import com.devellany.sample.account.ui.params.EmailConfirmParams;
 import com.devellany.sample.common.domain.BaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Getter
-@NoArgsConstructor @AllArgsConstructor
+@NoArgsConstructor
 public class AccountConfirm extends BaseEntity {
     @Transient public static final AccountConfirm EMPTY = new AccountConfirm();
 
