@@ -46,7 +46,7 @@ public class AccountEmailController extends BaseController {
         } catch (AlreadyConfirmTokenException e) {
             return "redirect:/";
         } catch (CustomException e) {
-            AuthenticationHelper.SignOut(request, response);
+            AuthenticationHelper.signOut(request, response);
             model.addAttribute("email", emailConfirmParams.getEmail());
             model.addAttribute("error", e.getExceptionName());
         }

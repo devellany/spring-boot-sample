@@ -3,17 +3,19 @@ package com.devellany.sample.account.application;
 import com.devellany.sample.account.domain.Account;
 import com.devellany.sample.account.domain.AccountConfirm;
 import com.devellany.sample.account.domain.enums.AuthType;
+import com.devellany.sample.account.domain.enums.VerifiedStatus;
 import com.devellany.sample.account.infra.AccountConfirmRepository;
 import com.devellany.sample.account.infra.AccountRepository;
 import com.devellany.sample.account.infra.exception.AlreadyConfirmTokenException;
+import com.devellany.sample.account.infra.exception.ExpiredTokenException;
 import com.devellany.sample.account.infra.exception.NoMatchingTokenException;
 import com.devellany.sample.account.infra.exception.UnknownEmailException;
 import com.devellany.sample.account.ui.form.ChangeEmailForm;
 import com.devellany.sample.account.ui.form.SignUpForm;
 import com.devellany.sample.account.ui.params.EmailConfirmParams;
+import com.devellany.sample.common.application.EmailService;
 import com.devellany.sample.common.domain.EmailMessage;
 import com.devellany.sample.common.infra.config.AppProperties;
-import com.devellany.sample.common.application.EmailService;
 import com.devellany.sample.common.infra.handler.CustomException;
 import com.devellany.sample.config.MockMvcTest;
 import com.devellany.sample.config.TestAccountHelper;
@@ -21,13 +23,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.powermock.reflect.Whitebox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @MockMvcTest
 class AccountServiceTest {
@@ -123,6 +127,42 @@ class AccountServiceTest {
         assertFalse(accountConfirm.isVerifiedStatus());
     }
 
+    @Test @DisplayName("이메일 인증 실패 - 사용된 토큰")
+    void email_confirm_already_token() {
+        AccountConfirm accountConfirm = accountConfirmRepository.findTopByAuthTypeEqualsAndAuthKeyOrderByRegDtmDesc(
+                AuthType.EMAIL, TestAccountHelper.EMAIL
+        ).orElse(AccountConfirm.EMPTY);
+
+        Whitebox.setInternalState(accountConfirm, "verifiedStatus", VerifiedStatus.CONFIRM);
+        assertTrue(accountConfirm.isVerifiedStatus());
+
+        EmailConfirmParams emailConfirmParams = EmailConfirmParams.builder()
+                .email(accountConfirm.getAuthKey())
+                .token(accountConfirm.getToken())
+                .build();
+
+        assertThrows(AlreadyConfirmTokenException.class, () -> accountService.processEmailConfirm(emailConfirmParams));
+    }
+
+    @Test @DisplayName("이메일 인증 실패 - 기간 만료 토큰")
+    void email_confirm_expired_token() {
+        AccountConfirm accountConfirm = accountConfirmRepository.findTopByAuthTypeEqualsAndAuthKeyOrderByRegDtmDesc(
+                AuthType.EMAIL, TestAccountHelper.EMAIL
+        ).orElse(AccountConfirm.EMPTY);
+
+        Whitebox.setInternalState(accountConfirm, "regDtm",
+                LocalDateTime.now().minusMinutes(appProperties.getTokenAvailablePeriod() + 1)
+        );
+
+        EmailConfirmParams emailConfirmParams = EmailConfirmParams.builder()
+                .email(accountConfirm.getAuthKey())
+                .token(accountConfirm.getToken())
+                .build();
+
+        assertFalse(accountConfirm.isVerifiedStatus());
+        assertThrows(ExpiredTokenException.class, () -> accountService.processEmailConfirm(emailConfirmParams));
+    }
+
     @Test @DisplayName("이메일 인증 실패 - 이메일 확인 불가")
     void email_confirm_mismatch_email() {
         EmailConfirmParams emailConfirmParams = EmailConfirmParams.builder()
@@ -162,8 +202,8 @@ class AccountServiceTest {
         assertThrows(UnknownEmailException.class, () -> accountService.resendEmailForConfirm(emailConfirmParams));
     }
 
-    @Test @DisplayName("이메일 변경")
-    void change_email_account() {
+    @Test @DisplayName("이메일 변경 - 성공")
+    void change_email_account_success() {
         ChangeEmailForm changeEmailForm = new ChangeEmailForm();
 
         changeEmailForm.setAccountName(TestAccountHelper.USERNAME);
@@ -185,5 +225,19 @@ class AccountServiceTest {
         assertNotEquals(beforeConfirm.getAuthKey(), afterConfirm.getAuthKey());
         assertNotEquals(beforeConfirm.getToken(), afterConfirm.getToken());
         verify(emailService).sendEmail(any(EmailMessage.class));
+    }
+
+    @Test @DisplayName("이메일 변경 - 실패")
+    void change_email_failed() {
+        ChangeEmailForm changeEmailForm = new ChangeEmailForm();
+
+        changeEmailForm.setAccountName("UNKNOWN");
+        changeEmailForm.setChangeEmail("test@email.com");
+
+        accountService.processChangeEmail(changeEmailForm);
+
+        Account account = accountRepository.findByAccountName(changeEmailForm.getAccountName()).orElse(Account.EMPTY);
+        assertEquals(account, Account.EMPTY);
+        verify(emailService, never()).sendEmail(any(EmailMessage.class));
     }
 }

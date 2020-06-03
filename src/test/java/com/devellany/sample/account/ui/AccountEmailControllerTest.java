@@ -4,16 +4,18 @@ import com.devellany.sample.account.application.AccountService;
 import com.devellany.sample.account.domain.Account;
 import com.devellany.sample.account.domain.AccountConfirm;
 import com.devellany.sample.account.domain.enums.AuthType;
+import com.devellany.sample.account.domain.enums.VerifiedStatus;
 import com.devellany.sample.account.infra.AccountConfirmRepository;
 import com.devellany.sample.account.infra.AccountRepository;
-import com.devellany.sample.common.domain.EmailMessage;
 import com.devellany.sample.common.application.EmailService;
+import com.devellany.sample.common.domain.EmailMessage;
 import com.devellany.sample.config.MockMvcTest;
 import com.devellany.sample.config.TestAccountHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.powermock.reflect.Whitebox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -99,6 +101,7 @@ class AccountEmailControllerTest {
                 AuthType.EMAIL, TestAccountHelper.EMAIL
         ).orElse(AccountConfirm.EMPTY);
 
+
         mockMvc.perform(get("/account/email/confirm")
                 .param("email", TestAccountHelper.EMAIL)
                 .param("token", "UNKNOWN_TOKEN")
@@ -107,6 +110,24 @@ class AccountEmailControllerTest {
         assertNotNull(accountConfirm.getToken());
         assertNotEquals(accountConfirm.getToken(), "UNKNOWN_TOKEN");
         assertFalse(accountConfirm.isVerifiedStatus());
+    }
+
+    @Test @DisplayName("이메일 인증 - 사용된 토큰")
+    void email_confirm_already_token() throws Exception {
+        AccountConfirm accountConfirm = accountConfirmRepository.findTopByAuthTypeEqualsAndAuthKeyOrderByRegDtmDesc(
+                AuthType.EMAIL, TestAccountHelper.EMAIL
+        ).orElse(AccountConfirm.EMPTY);
+
+        Whitebox.setInternalState(accountConfirm, "verifiedStatus", VerifiedStatus.CONFIRM);
+
+        assertNotNull(accountConfirm.getToken());
+        assertTrue(accountConfirm.isVerifiedStatus());
+
+        mockMvc.perform(get("/account/email/confirm")
+                .param("email", TestAccountHelper.EMAIL)
+                .param("token", accountConfirm.getToken())
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/"));
     }
 
     @Test @DisplayName("이메일 재발송 - 성공")
@@ -158,12 +179,24 @@ class AccountEmailControllerTest {
         verify(emailService).sendEmail(any(EmailMessage.class));
     }
 
-    @Test @DisplayName("이메일 변경 - 실패")
-    void change_email_fail() throws Exception {
+    @Test @DisplayName("이메일 변경 - 미확인 계정")
+    void change_email_fail_unknown_account() throws Exception {
         mockMvc.perform(post("/account/email/change")
                 .param("accountName", "ACCOUNT")
                 .param("password", "PASSWORD")
                 .param("changeEmail", "test@email.com")
+                .with(csrf())
+        ).andExpect(view().name("/account/email/change"));
+
+        verify(emailService, never()).sendEmail(any(EmailMessage.class));
+    }
+
+    @Test @DisplayName("이메일 변경 - 사용 중인 이메일")
+    void change_email_fail_used_change_email() throws Exception {
+        mockMvc.perform(post("/account/email/change")
+                .param("accountName", TestAccountHelper.USERNAME)
+                .param("password", TestAccountHelper.PASSWORD)
+                .param("changeEmail", TestAccountHelper.EMAIL)
                 .with(csrf())
         ).andExpect(view().name("/account/email/change"));
 

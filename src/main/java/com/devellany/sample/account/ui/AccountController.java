@@ -33,7 +33,7 @@ public class AccountController extends BaseController {
 
     @GetMapping("/account/sign-in")
     public String signInForm() {
-        return "account/sign-in";
+        return "/account/sign-in";
     }
 
     @GetMapping("/account/sign-up")
@@ -56,7 +56,7 @@ public class AccountController extends BaseController {
 
     @GetMapping("/account/sign-out")
     public String SignOut(HttpServletRequest request, HttpServletResponse response) {
-        AuthenticationHelper.SignOut(request, response);
+        AuthenticationHelper.signOut(request, response);
 
         return "redirect:/";
     }

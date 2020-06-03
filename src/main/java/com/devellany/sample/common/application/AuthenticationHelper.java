@@ -1,8 +1,8 @@
 package com.devellany.sample.common.application;
 
 import com.devellany.sample.account.domain.Account;
-import com.devellany.sample.common.domain.security.UserAccount;
 import com.devellany.sample.account.infra.AccountRepository;
+import com.devellany.sample.common.domain.security.UserAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,7 +43,7 @@ public class AuthenticationHelper implements UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(token);
     }
 
-    public static void SignOut(HttpServletRequest request, HttpServletResponse response) {
+    public static void signOut(HttpServletRequest request, HttpServletResponse response) {
         Authentication authentication = AuthenticationHelper.getAuthentication();
         if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);

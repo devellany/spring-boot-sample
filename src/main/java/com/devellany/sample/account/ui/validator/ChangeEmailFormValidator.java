@@ -43,10 +43,6 @@ public class ChangeEmailFormValidator implements Validator {
             return false;
         }
 
-        if (!accountRepository.existsByAccountName(changeEmailForm.getAccountName())) {
-            return false;
-        }
-
         return passwordEncoder.matches(changeEmailForm.getPassword(), account.getPassword());
     }
 }

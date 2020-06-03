@@ -52,6 +52,7 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     testImplementation 'org.springframework.security:spring-security-test'
+    testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.7'
 }
 
 test {

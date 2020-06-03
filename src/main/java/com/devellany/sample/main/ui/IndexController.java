@@ -13,10 +13,10 @@ public class IndexController  extends BaseController {
     @GetMapping("/")
     public String index(@CurrentAccount Account account, Model model) {
         if (account.isEmpty()) {
-            return "account/sign-in";
+            return "/account/sign-in";
         }
 
         model.addAttribute("account", account);
-        return "main/index";
+        return "/main/index";
     }
 }

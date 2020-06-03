@@ -6,8 +6,8 @@ import com.devellany.sample.account.domain.AccountConfirm;
 import com.devellany.sample.account.domain.enums.AuthType;
 import com.devellany.sample.account.infra.AccountConfirmRepository;
 import com.devellany.sample.account.infra.AccountRepository;
-import com.devellany.sample.common.domain.EmailMessage;
 import com.devellany.sample.common.application.EmailService;
+import com.devellany.sample.common.domain.EmailMessage;
 import com.devellany.sample.config.MockMvcTest;
 import com.devellany.sample.config.TestAccountHelper;
 import org.junit.jupiter.api.AfterEach;
@@ -53,6 +53,14 @@ class AccountControllerTest {
         reset(emailService);
     }
 
+    @Test @DisplayName("로그인 화면")
+    void login_page() throws Exception {
+        mockMvc.perform(get("/account/sign-in"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/account/sign-in"))
+                .andExpect(unauthenticated());
+    }
+
     @Test @DisplayName("로그인 성공 - 메일")
     void login_success_by_email() throws Exception {
         this.signInTest(TestAccountHelper.EMAIL);
@@ -74,8 +82,17 @@ class AccountControllerTest {
                 .andExpect(unauthenticated());
     }
 
+    @Test @DisplayName("로그아웃")
+    void logout() throws Exception {
+        testAccountHelper.signInUser();
+        mockMvc.perform(get("/account/sign-out")
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"))
+                .andExpect(unauthenticated());
+    }
+
     @Test @DisplayName("회원 가입 화면")
-    void signUpForm() throws Exception {
+    void sign_up_form() throws Exception {
         mockMvc.perform(get("/account/sign-up"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("/account/sign-up"))
@@ -83,22 +100,8 @@ class AccountControllerTest {
                 .andExpect(unauthenticated());
     }
 
-    @Test @DisplayName("회원 가입 처리 - 입력값 오류")
-    void signUpSubmit_with_wrong_input() throws Exception {
-        mockMvc.perform(post("/account/sign-up")
-                .param("nickname", "test")
-                .param("accountName", "test")
-                .param("email", "email")
-                .param("password", "12345")
-                .param("passwordConfirm", "12345")
-                .with(csrf())
-        ).andExpect(status().isOk())
-                .andExpect(view().name("/account/sign-up"))
-                .andExpect(unauthenticated());
-    }
-
-    @Test @DisplayName("회원 가입 처리 - 입력값 정상")
-    void signUpSubmit_with_correct_input() throws Exception {
+    @Test @DisplayName("회원 가입 - 성공")
+    void sign_up_submit_with_correct_input() throws Exception {
         testAccountHelper.resetForCreateUser();
         reset(emailService);
 
@@ -121,6 +124,62 @@ class AccountControllerTest {
         assertNotEquals(account.getPassword(), "12345678");
         assertNotNull(accountConfirm.getToken());
         verify(emailService).sendEmail(any(EmailMessage.class));
+    }
+
+    @Test @DisplayName("회원 가입 - 비밀번호 확인 불가")
+    void sign_up_submit_fail_mismatched_password() throws Exception {
+        mockMvc.perform(post("/account/sign-up")
+                .param("nickname", "test")
+                .param("accountName", "test")
+                .param("email", "test@email.com")
+                .param("password", "12345678")
+                .param("passwordConfirm", "00000000")
+                .with(csrf())
+        ).andExpect(status().isOk())
+                .andExpect(view().name("/account/sign-up"))
+                .andExpect(unauthenticated());
+    }
+
+    @Test @DisplayName("회원 가입 - 이메일 중복")
+    void sign_up_submit_fail_alreay_email() throws Exception {
+        mockMvc.perform(post("/account/sign-up")
+                .param("nickname", "test")
+                .param("accountName", "test")
+                .param("email", TestAccountHelper.EMAIL)
+                .param("password", "12345678")
+                .param("passwordConfirm", "00000000")
+                .with(csrf())
+        ).andExpect(status().isOk())
+                .andExpect(view().name("/account/sign-up"))
+                .andExpect(unauthenticated());
+    }
+
+    @Test @DisplayName("회원 가입 - 계정 중복")
+    void sign_up_submit_fail_alreay_account() throws Exception {
+        mockMvc.perform(post("/account/sign-up")
+                .param("nickname", "test")
+                .param("accountName", TestAccountHelper.USERNAME)
+                .param("email", "test@email.com")
+                .param("password", "12345678")
+                .param("passwordConfirm", "00000000")
+                .with(csrf())
+        ).andExpect(status().isOk())
+                .andExpect(view().name("/account/sign-up"))
+                .andExpect(unauthenticated());
+    }
+
+    @Test @DisplayName("회원 가입 - 닉네임 중복")
+    void sign_up_submit_fail_alreay_nickmane() throws Exception {
+        mockMvc.perform(post("/account/sign-up")
+                .param("nickname", TestAccountHelper.USERNAME)
+                .param("accountName", "test")
+                .param("email", "test@email.com")
+                .param("password", "12345678")
+                .param("passwordConfirm", "00000000")
+                .with(csrf())
+        ).andExpect(status().isOk())
+                .andExpect(view().name("/account/sign-up"))
+                .andExpect(unauthenticated());
     }
 
     private void signInTest(String id) throws Exception {

@@ -12,9 +12,9 @@ import com.devellany.sample.account.infra.exception.UnknownEmailException;
 import com.devellany.sample.account.ui.form.ChangeEmailForm;
 import com.devellany.sample.account.ui.form.SignUpForm;
 import com.devellany.sample.account.ui.params.EmailConfirmParams;
+import com.devellany.sample.common.application.EmailService;
 import com.devellany.sample.common.domain.EmailMessage;
 import com.devellany.sample.common.infra.config.AppProperties;
-import com.devellany.sample.common.application.EmailService;
 import com.devellany.sample.common.infra.handler.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -77,7 +77,7 @@ public class AccountService {
             throw new AlreadyConfirmTokenException("Already processed.");
         }
 
-        if (!accountConfirm.availableToken(appProperties.getTokenAvailablePeriod())) { // todo test code
+        if (!accountConfirm.availableToken(appProperties.getTokenAvailablePeriod())) {
             throw new ExpiredTokenException("expired token.");
         }
 
