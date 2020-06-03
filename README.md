@@ -19,6 +19,7 @@ For the purpose of learning "Spring Boot", I studied the login functions require
 - Thymeleaf
 - Modelmapper
 - JUnit
+- PowerMockito
 - Lombok
 
 ### Front-end
@@ -54,7 +55,7 @@ See the team blog "dico.me" for more details.
 
 Link: [Remote connection for H2 Database](https://dico.me/java/articles/241)
 
-### How to connect "local_h2"?
+### How to connect "local_H2"?
 Notice: Run to Appication for `EmbeddedH2Config`.
 ```
 HOST: localhost

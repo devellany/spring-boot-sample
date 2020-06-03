@@ -65,6 +65,12 @@ for(qPattern in "**/QA" .. "**/QZ"){
     Qdomains.add(qPattern+"*")
 }
 
+def excludeClass = [
+        "com/devellany/sample/Application.class",
+        "**/EmbeddedH2Config.class",
+        "**/HtmlEmailService.class"
+]
+
 jacocoTestReport {
     dependsOn test
     reports {
@@ -75,7 +81,7 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it,
-                    exclude: [] + Qdomains)
+                    exclude: [] + Qdomains + excludeClass)
         }))
     }
 
@@ -87,7 +93,7 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             element = 'CLASS'
-            excludes = Qdomains
+            excludes = Qdomains + excludeClass
         }
     }
 }
