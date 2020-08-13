@@ -3,13 +3,15 @@ package com.devellany.sample.common.infra.handler;
 import com.devellany.sample.account.domain.Account;
 import com.devellany.sample.account.domain.AccountConfirm;
 import com.devellany.sample.account.domain.enums.AuthType;
-import com.devellany.sample.common.domain.security.UserAccount;
 import com.devellany.sample.account.infra.AccountConfirmRepository;
+import com.devellany.sample.common.domain.security.UserAccount;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +38,11 @@ public class SignInSuccessHandler extends SavedRequestAwareAuthenticationSuccess
 
         if (!accountConfirm.isVerifiedStatus()) {
             this.clearAuthenticationAttributes(request);
-            redirectStrategy.sendRedirect(request, response, "/account/email/confirm");
+            UriComponents uriComponents = UriComponentsBuilder.fromPath("/account/email/confirm")
+                    .queryParam("email", account.getEmail())
+                    .build();
+
+            redirectStrategy.sendRedirect(request, response, uriComponents.toUriString());
         } else {
             super.onAuthenticationSuccess(request, response, authentication);
         }

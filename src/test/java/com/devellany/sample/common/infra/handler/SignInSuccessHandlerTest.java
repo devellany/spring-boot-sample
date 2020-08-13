@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.RedirectStrategy;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -79,6 +81,10 @@ class SignInSuccessHandlerTest {
 
         assertNotNull(accountConfirm);
         assertFalse(accountConfirm.isVerifiedStatus());
-        verify(redirectStrategy).sendRedirect(any(HttpServletRequest.class), any(HttpServletResponse.class), eq("/account/email/confirm"));
+
+        UriComponents uriComponents = UriComponentsBuilder.fromPath("/account/email/confirm")
+                .queryParam("email", AuthenticationHelper.getAccountEmail())
+                .build();
+        verify(redirectStrategy).sendRedirect(any(HttpServletRequest.class), any(HttpServletResponse.class), eq(uriComponents.toUriString()));
     }
 }
